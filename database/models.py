@@ -1,0 +1,1 @@
+#Defines database tables.

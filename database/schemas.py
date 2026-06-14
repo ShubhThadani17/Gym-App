@@ -1,0 +1,1 @@
+#Defines API request/response structures.
