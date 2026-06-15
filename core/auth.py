@@ -1,20 +1,19 @@
 #Authentication helper functions.
-from passlib.context import CryptContext
-from datetime import datetime, timedelta , timezone
-from jose import jwt
-from core.config import SECRET_KEY, ALGORITHM, TOKEN_EXPIRE_MINUTES
 
-password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from sqlalchemy.orm import Session
+from database.models import User
+from core.security import verify_password
+from fastapi import HTTPException , status
 
+def authenticate_user(db: Session, email: str, password: str):
+    user=db.query(User).filter(User.email==email).first()
+    if not user : 
+        return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    
+    if not verify_password(password , user.hashed_password):
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password")
+    
+    return user
 
-def hash_password(password: str):
-    return password_context.hash(password)
-
-def verify_password(unhashed_password: str , hashed_pasword : str):
-    return password_context.verify(unhashed_password, hashed_pasword)
-
-def create_access_token(data: dict):
-    encode_data = data.copy()
-    expire_time= datetime.now(timezone.utc) + timedelta(minutes=TOKEN_EXPIRE_MINUTES)
-    encode_data.update({"expire" : expire_time})
-    return jwt.encode(encode_data, SECRET_KEY, algorithm=ALGORITHM)
+def get_current_user():
+    pass

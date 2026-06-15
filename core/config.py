@@ -1,4 +1,14 @@
 #Loads environment variables.
 
-TOKEN_EXPIRE_MINUTES = 60
-SECRET_KEY = "fastapi-gymappsecretkey"
+from pydantic_settings import BaseSettings , SettingsConfigDict
+
+class Settings(BaseSettings):
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    DATABASE_URL:str
+    TOKEN_EXPIRE_MINUTES:int
+    SECRET_KEY:str
+    ALGORITHM:str
+
+settings = Settings()
