@@ -9,7 +9,7 @@ def create_member(db : Session , member_data):
     db.add(new_member)
     db.commit()
     db.refresh(new_member)
-    return {"message":"Member created successfully" , "member":new_member.name}
+    return new_member
 
 
 def get_member(db :Session , member_id : int):
