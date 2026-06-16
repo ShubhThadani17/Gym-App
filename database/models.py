@@ -1,6 +1,6 @@
 #Defines database tables.
 
-from sqlalchemy import Column , Integer , String , Date
+from sqlalchemy import Column , Integer , String , Date , ForeignKey
 from sqlalchemy.orm import declarative_base, relationship 
 
 Base=declarative_base()
@@ -12,7 +12,7 @@ class User(Base):
     username=Column(String , unique=True , index=True)
     email=Column(String , unique=True , index=True)
     hashed_password=Column(String)
-    User.members = relationship("Member", back_populates="user")
+    members = relationship("Member", back_populates="user")
 
 class Member(Base):
     __tablename__ = "members"
@@ -24,4 +24,6 @@ class Member(Base):
     age=Column(Integer)
     gender=Column(String)
     created_at=Column(Date)
-    Member.user = relationship("User", back_populates="members")
+
+    user_id = Column(Integer, ForeignKey("users.id"))
+    user = relationship("User", back_populates="members")
