@@ -30,7 +30,6 @@ class SubscriptionCreate(BaseModel):
     status:str
 
 class SubscriptionUpdate(BaseModel):
-    member_id:Optional[int] = None
     start_date:Optional[date] = None
     end_date:Optional[date] = None
     status:Optional[str] = None
