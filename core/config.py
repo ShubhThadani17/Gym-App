@@ -10,5 +10,7 @@ class Settings(BaseSettings):
     TOKEN_EXPIRE_MINUTES:int
     SECRET_KEY:str
     ALGORITHM:str
+    EMAIL_ADDRESS:str
+    EMAIL_PASSWORD:str
 
 settings = Settings()
