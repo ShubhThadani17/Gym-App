@@ -1,6 +1,6 @@
 #Defines database tables.
 
-from sqlalchemy import Column , Integer , String , Date , ForeignKey
+from sqlalchemy import Column , Integer , String , Date , ForeignKey , Float
 from sqlalchemy.orm import declarative_base, relationship 
 from datetime import date
 
@@ -27,8 +27,8 @@ class Member(Base):
 
     user_id = Column(Integer, ForeignKey("users.id"))
     user = relationship("User", back_populates="members")
-    subscription = relationship("Subscription",back_populates="member",uselist=False)
-    payments = relationship("Payment",back_populates="member")
+    subscription = relationship("Subscription", back_populates="member", uselist=False, cascade="all, delete-orphan")
+    payments = relationship("Payment", back_populates="member", cascade="all, delete-orphan")
 
 class Subscription(Base):
     __tablename__ = "subscriptions"
@@ -46,7 +46,7 @@ class Payment(Base):
 
     id=Column(Integer , primary_key=True , index=True)
     member_id=Column(Integer , ForeignKey("members.id"))
-    amount=Column(Integer)
+    amount=Column(Float)
     payment_date=Column(Date, default=date.today)
     payment_method=Column(String)
     status=Column(String)
