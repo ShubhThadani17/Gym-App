@@ -191,11 +191,3 @@ Two background jobs run automatically on server startup:
 | `TOKEN_EXPIRE_MINUTES` | JWT expiry duration in minutes |
 | `EMAIL_ADDRESS` | Gmail address used to send reminders |
 | `EMAIL_PASSWORD` | Gmail App Password |
-
-## Running Tests
-
-```bash
-pytest tests/ -v
-```
-
-Tests use an in-memory SQLite database and cover all routers: auth, members, subscriptions, payments, and dashboard. Each test function runs in an isolated database so tests never affect each other.
