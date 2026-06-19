@@ -9,7 +9,7 @@ from database.db import get_db
 
 router = APIRouter()
 
-@router.post("/register")
+@router.post("/register", response_model=dict)
 def register(user: UserRegister , db=Depends(get_db)):
     client= db.query(User).filter(User.email==user.email).first()
     if client:
