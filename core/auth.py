@@ -13,11 +13,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def authenticate_user(db: Session, email: str, password: str):
     user=db.query(User).filter(User.email==email).first()
-    if not user : 
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    
-    if not verify_password(password , user.hashed_password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password")
+
+    if not user or not verify_password(password , user.hashed_password):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
     
     return user
 
