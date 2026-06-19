@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel
 from datetime import date
-from typing import Optional
+from typing import Optional , Literal
 
 class UserRegister(BaseModel):
 
@@ -27,7 +27,7 @@ class SubscriptionCreate(BaseModel):
     member_id:int
     start_date:date
     end_date:date
-    status:str
+    status:Literal["active", "expired", "cancelled"] = "active"
 
 class SubscriptionUpdate(BaseModel):
     start_date:Optional[date] = None
@@ -37,8 +37,8 @@ class SubscriptionUpdate(BaseModel):
 class PaymentCreate(BaseModel):
     member_id:int 
     amount : float
-    payment_method : str
-    status: str = "pending"
+    payment_method : Literal["cash", "upi", "card", "online"]
+    status: Literal["paid", "pending", "failed"] = "pending"
 
 class DashboardResponse(BaseModel):
     total_members: int
