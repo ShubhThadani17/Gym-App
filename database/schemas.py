@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel
 from datetime import date
-from typing import Optional , Literal
+from typing import Optional , Literal , List
 
 class UserRegister(BaseModel):
 
@@ -45,3 +45,43 @@ class DashboardResponse(BaseModel):
     active_subscriptions: int
     expired_subscriptions: int
     total_revenue: float
+
+
+class MemberResponse(BaseModel):
+    id: int
+    name: str
+    email: str
+    phone: str
+    age: int
+    gender: str
+    created_at: date
+
+    model_config = {"from_attributes": True}
+
+
+class SubscriptionResponse(BaseModel):
+    id: int
+    member_id: int
+    start_date: date
+    end_date: date
+    status: str
+
+    model_config = {"from_attributes": True}
+
+
+class PaymentResponse(BaseModel):
+    id: int
+    member_id: int
+    amount: float
+    payment_date: date
+    payment_method: str
+    status: str
+
+    model_config = {"from_attributes": True}
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: str
+
+    model_config = {"from_attributes": True}
