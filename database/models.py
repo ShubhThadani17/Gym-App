@@ -1,6 +1,6 @@
 #Defines database tables.
 
-from sqlalchemy import Column , Integer , String , Date , ForeignKey , Float
+from sqlalchemy import Column , Integer , String , Date , ForeignKey , Float , UniqueConstraint
 from sqlalchemy.orm import declarative_base, relationship 
 from datetime import date
 
@@ -19,8 +19,8 @@ class Member(Base):
 
     id=Column(Integer , primary_key=True , index=True)
     name=Column(String , index=True)
-    email=Column(String , unique=True , index=True)
-    phone=Column(String , unique=True , index=True)
+    email=Column(String , index=True)
+    phone=Column(String , index=True)
     age=Column(Integer)
     gender=Column(String)
     created_at=Column(Date, default=date.today)
@@ -29,6 +29,9 @@ class Member(Base):
     user = relationship("User", back_populates="members")
     subscription = relationship("Subscription", back_populates="member", uselist=False, cascade="all, delete-orphan")
     payments = relationship("Payment", back_populates="member", cascade="all, delete-orphan")
+
+    __table_args__ = ( UniqueConstraint("email", "user_id", name="uq_member_email_user"),
+                      UniqueConstraint("phone", "user_id", name="uq_member_phone_user"),)
 
 class Subscription(Base):
     __tablename__ = "subscriptions"
