@@ -9,6 +9,11 @@ def create_subscription(db:Session , subscription_data , user_id:int):
     member = (db.query(Member).filter(Member.id == subscription_data.member_id,Member.user_id == user_id).first())
     if not member:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Member not found")
+    
+    existing = (db.query(Subscription).filter(Subscription.member_id == subscription_data.member_id, Subscription.status == "active").first())
+    if existing:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Member already has an active subscription")
+    
     new_subscription = Subscription(**subscription_data.model_dump())
     db.add(new_subscription)
     db.commit()
@@ -25,7 +30,7 @@ def get_subscription(db:Session , subscription_id:int, user_id:int):
 def get_all_subscriptions(db:Session , user_id :int ):
     return (db.query(Subscription).join(Member).filter(Member.user_id == user_id).all())
 
-def renew_subscription(db:Session , subscription_id:int ,user_id: int,new_data):
+def renew_subscription(db:Session , subscription_id:int ,user_id: int):
     subscription = (db.query(Subscription).join(Member).filter(Subscription.id == subscription_id,Member.user_id == user_id).first())
 
     if not subscription:
@@ -43,9 +48,10 @@ def cancel_subscription(db:Session , subscription_id:int,user_id: int):
 
     if not subscription:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Subscription not found")
-    db.delete(subscription)
+    subscription.status = "cancelled"
     db.commit()
-    return {"message":"Subscription deleted successfully"}
+    db.refresh(subscription)
+    return subscription
 
 def expire_subscriptions(db:Session):
     expired_subscriptions = (db.query(Subscription).filter(Subscription.end_date < date.today(),Subscription.status != "expired").all())
