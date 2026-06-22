@@ -15,16 +15,16 @@ router = APIRouter()
 def create_member_endpoint(member_data : MemberCreate , db=Depends(get_db), current_user: User = Depends(get_current_user)):
     return create_member(db , member_data,current_user.id)
 
+@router.get("/members/search", response_model=List[MemberResponse])
+def search_member_endpoint(name: str = Query(min_length=2, max_length=10),db=Depends(get_db),current_user: User = Depends(get_current_user)):
+     return search_member(db,current_user.id,name)
+
 @router.get("/members/{member_id}", response_model=MemberResponse)
 def get_member_endpoint(member_id : int , db=Depends(get_db), current_user: User = Depends(get_current_user)):
     member = get_member(db , member_id,current_user.id)
     if not member :
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Member not found")
     return member
-
-@router.get("/members/search", response_model=List[MemberResponse])
-def search_member_endpoint(name: str = Query(min_length=2, max_length=10),db=Depends(get_db),current_user: User = Depends(get_current_user)):
-     return search_member(db,current_user.id,name)
 
 @router.get("/members", response_model=List[MemberResponse])
 def get_all_members_endpoint(db=Depends(get_db), current_user: User = Depends(get_current_user)):
