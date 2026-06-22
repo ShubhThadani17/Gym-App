@@ -1,13 +1,13 @@
 #Defines API request/response structures.
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, EmailStr
 from datetime import date
 from typing import Optional , Literal , List
 
 class UserRegister(BaseModel):
 
-    email:str
-    password:str
+    email:EmailStr
+    password:str=Field(min_length=6, max_length=64)
 
 class MemberCreate(BaseModel):
     name:str
@@ -32,7 +32,7 @@ class SubscriptionCreate(BaseModel):
 class SubscriptionUpdate(BaseModel):
     start_date:Optional[date] = None
     end_date:Optional[date] = None
-    status:Optional[str] = None
+    status:Optional[Literal["active", "expired", "cancelled"]] = None
 
 class PaymentCreate(BaseModel):
     member_id:int 
