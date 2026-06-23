@@ -29,10 +29,7 @@ def get_all_payments(db : Session , user_id :int ):
 
 
 def get_member_payments(db : Session , member_id: int ,user_id: int):
-    payments = (db.query(Payment).join(Member).filter(Payment.member_id == member_id,Member.user_id == user_id).all())
-    if not payments:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Payment not found")
-    return payments
+    return (db.query(Payment).join(Member).filter(Payment.member_id == member_id, Member.user_id == user_id).all())
 
 def total_revenue(db : Session,user_id: int):
     result = (db.query(func.sum(Payment.amount)).join(Member).filter(Member.user_id == user_id).scalar())
