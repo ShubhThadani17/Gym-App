@@ -13,7 +13,7 @@ router=APIRouter()
 def create_payment_endpoint(payment_data : PaymentCreate , db = Depends(get_db) , current_user : User = Depends(get_current_user)):
     return create_payment(db=db , payment_data=payment_data, user_id=current_user.id)
 
-@router.get("/payments/revenue")
+@router.get("/payments/total-revenue")
 def get_total_revenue(db = Depends(get_db) ,current_user : User = Depends(get_current_user)):
     return total_revenue(db=db,user_id=current_user.id)
 
