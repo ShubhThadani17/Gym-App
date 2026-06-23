@@ -26,6 +26,6 @@ def get_all_subscription_endpoint(db = Depends(get_db) , current_user :User = De
 def renew_subscription_endpoint(subscription_id : int , db= Depends(get_db) , current_user :User = Depends(get_current_user)):
     return renew_subscription(db , subscription_id ,current_user.id)
 
-@router.delete("/subscriptions/{subscription_id}")
-def delete_subscription_endpoint(subscription_id : int  , db= Depends(get_db) , current_user :User = Depends(get_current_user)):  
-    return cancel_subscription(db , subscription_id,current_user.id)
+@router.post("/subscriptions/{subscription_id}/cancel", response_model=SubscriptionResponse)
+def cancel_subscription_endpoint(subscription_id: int, db=Depends(get_db), current_user: User = Depends(get_current_user)):
+    return cancel_subscription(db, subscription_id, current_user.id)
